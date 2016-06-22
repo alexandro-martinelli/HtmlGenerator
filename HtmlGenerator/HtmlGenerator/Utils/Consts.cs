@@ -14,11 +14,5 @@ namespace HtmlGenerator.Utils
             return BeginTag + pTag + CloseTag;
         }
 
-        public static string EncapsuleBeginTag(string pTag)
-        {
-            return BeginTag + pTag + CloseTag;
-        }
-
-
     }
 }

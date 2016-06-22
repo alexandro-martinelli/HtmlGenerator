@@ -1,3 +1,4 @@
+using HtmlGenerator.Utils;
 using System.Collections.Generic;
 
 namespace HtmlGenerator.Tags
@@ -7,16 +8,30 @@ namespace HtmlGenerator.Tags
 
         public bool SelectFirstIfNoSelected { get; set; }
 
-        public void AddItem(string pValue, bool pSelected)
+        public void AddOption(string pValue, string pText, bool pSelected)
         {
             ListOption lItem = new ListOption();
             lItem.Value = pValue;
             lItem.Selected = pSelected;
-            Add(lItem);
+            lItem.Text = pText;
+            AddAndSelectOption(pSelected, lItem);
+        }
+
+        private void AddAndSelectOption(bool pSelected, ListOption pItem)
+        {
+            Add(pItem);
             if (pSelected)
             {
-                UnselectedOthers(lItem);
+                UnselectedOthers(pItem);
             }
+        }
+
+        public ListOption AddOption(Proc<ListOption> pMaker)
+        {
+            var lOption = new ListOption();
+            pMaker(lOption);
+            AddAndSelectOption(lOption.Selected, lOption);
+            return lOption;
         }
 
         private void UnselectedOthers(ListOption pItem)

@@ -1,9 +1,18 @@
 using HtmlGenerator.Enums;
+using System.Collections.Generic;
 
 namespace HtmlGenerator.Commons
 {
     public abstract class HtmlTag
     {
+        public HtmlTag()
+        {
+            AnotherAttributes = new List<object>();
+            AutoComplete = Usage.Default;
+            ReadOnly = false;
+            Required = false;
+        }
+
         public bool AutoFocus { get; set; }
         public string Id { get; set; }
         public Usage AutoComplete { get; set; }
@@ -17,5 +26,6 @@ namespace HtmlGenerator.Commons
         public int MaximunLength { get; set; }
         public string Value { get; set; }
         public string Class { get; set; }
+        public List<object> AnotherAttributes { get; private set; }
     }
 }

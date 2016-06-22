@@ -3,7 +3,7 @@ using HtmlGenerator.Commons;
 namespace HtmlGenerator.Tags
 {
 
-    public class Div : HtmlContainer
+    public class Div : HtmlTextContainer
     {
 
     }

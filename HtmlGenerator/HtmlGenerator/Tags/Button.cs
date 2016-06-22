@@ -5,13 +5,19 @@ namespace HtmlGenerator.Tags
 {
     public class Button : HtmlTextContainer
     {
-        public Button(ButtonType pType)
-        {
-            Type = pType;
 
+        public Button()
+        {
+            Type = ButtonType.Button;
+            FormOptions = new FormOptions();
         }
 
-        public ButtonType Type { get; private set; }
+        public Button(ButtonType pType) : base()
+        {
+            Type = pType;
+        }
+
+        public ButtonType Type { get; set; }
         public FormOptions FormOptions { get; }
 
 

@@ -4,10 +4,10 @@ namespace HtmlGenerator.Utils
 {
     public static class HtmlMaker
     {
-        public static T MakeTag<T>(Proc<T> pMaker) where T : HtmlTag, new()
+        public static T MakeTag<T>(Proc<T> pPopulator) where T : HtmlTag, new()
         {
             T lHtmlTag = new T();
-            pMaker(lHtmlTag);
+            pPopulator(lHtmlTag);
             return lHtmlTag;
         }
 

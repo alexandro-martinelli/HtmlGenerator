@@ -1,8 +1,11 @@
+using HtmlGenerator.Commons;
+
 namespace HtmlGenerator.Tags
 {
-    public class ListOption
+    public class ListOption : HtmlTag
     {
-        public string Value { get; set; }
+        public string Label { get; set; }
         public bool Selected { get; set; }
+        public string Text { get; set; }
     }
 }

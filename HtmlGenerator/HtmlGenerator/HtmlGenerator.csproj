@@ -74,6 +74,7 @@
     <Compile Include="Tags\Div.cs" />
     <Compile Include="Tags\Form.cs" />
     <Compile Include="Utils\Consts.cs" />
+    <Compile Include="Utils\HtmlHelper.cs" />
     <Compile Include="Utils\HtmlMaker.cs" />
     <Compile Include="Utils\Proc.cs" />
   </ItemGroup>

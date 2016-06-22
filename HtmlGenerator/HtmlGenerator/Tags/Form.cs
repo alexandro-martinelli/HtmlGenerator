@@ -13,12 +13,5 @@ namespace HtmlGenerator.Tags
         public FormMethod Method { get; set; }
         public bool NoValidade { get; set; }
         public Target Target { get; set; }
-
-        public static Form MakeForm(Proc<Form> pMaker)
-        {
-            Form lForm = new Form();
-            pMaker(lForm);
-            return lForm;
-        }
     }
 }
