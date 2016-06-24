@@ -13,21 +13,10 @@ namespace HtmlGenerator.Tags
         }
 
         public InputType Type { get { return FType; } }
-        
-
-        // Number - Date/DateTime/DateTimeLocal/Time - Email - Password - URL
-        public AddOnOptions AddOn { get; set; }
-
-        //Number
-        public string Interval { get; set; }
-
-        // Number and Date
-        public string MaximunValue { get; set; }
-        public string MinimunValue { get; set; }
 
         //Listered Input
         public string ListName { get; set; }
-        public ListOptions ListData { get; set; }
+        public Options ListData { get; set; }
         
         //File
         public FileOptions FileOptions { get; set; }
@@ -39,10 +28,10 @@ namespace HtmlGenerator.Tags
         public string AlternateText { get; set; }
 
         // Submit and Image
-        public FormOptions FormOptions { get; set; }
-
-        // CheckBox or RadioBox
-        public bool Checked { get; set; }
+        public FormOptions FormOptions { get; set; }        
 
     }
+
+
+
 }

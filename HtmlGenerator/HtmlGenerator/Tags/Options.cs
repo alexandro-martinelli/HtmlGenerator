@@ -3,21 +3,20 @@ using System.Collections.Generic;
 
 namespace HtmlGenerator.Tags
 {
-    public class ListOptions : List<ListOption>
+    public class Options : List<Option>
     {
-
         public bool SelectFirstIfNoSelected { get; set; }
 
         public void AddOption(string pValue, string pText, bool pSelected)
         {
-            ListOption lItem = new ListOption();
+            Option lItem = new Option();
             lItem.Value = pValue;
             lItem.Selected = pSelected;
             lItem.Text = pText;
             AddAndSelectOption(pSelected, lItem);
         }
 
-        private void AddAndSelectOption(bool pSelected, ListOption pItem)
+        private void AddAndSelectOption(bool pSelected, Option pItem)
         {
             Add(pItem);
             if (pSelected)
@@ -26,17 +25,17 @@ namespace HtmlGenerator.Tags
             }
         }
 
-        public ListOption AddOption(Proc<ListOption> pMaker)
+        public Option AddOption(Proc<Option> pMaker)
         {
-            var lOption = new ListOption();
+            var lOption = new Option();
             pMaker(lOption);
             AddAndSelectOption(lOption.Selected, lOption);
             return lOption;
         }
 
-        private void UnselectedOthers(ListOption pItem)
+        private void UnselectedOthers(Option pItem)
         {
-            foreach (ListOption lItem in this)
+            foreach (Option lItem in this)
             {
                 lItem.Selected = (lItem == pItem);
             }
