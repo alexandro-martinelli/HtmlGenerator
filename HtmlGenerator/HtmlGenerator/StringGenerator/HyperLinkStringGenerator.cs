@@ -3,6 +3,7 @@ using HtmlGenerator.Enums;
 using HtmlGenerator.Tags;
 
 namespace HtmlGenerator.StringGenerator
+
 {
     public class HyperLinkStringGenerator : HtmlTextContainerStringGenerator
     {

@@ -11,6 +11,7 @@ namespace HtmlGeneratorTest
         [TestMethod]
         public void TestToHtmlString()
         {
+
             ButtonStringGenerator lGenerator = new ButtonStringGenerator();
             Button lButton = new Button();
             lButton.Name = "btnCancelar";

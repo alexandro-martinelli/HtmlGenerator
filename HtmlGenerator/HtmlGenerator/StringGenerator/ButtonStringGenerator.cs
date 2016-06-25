@@ -4,6 +4,7 @@ using HtmlGenerator.Tags;
 using HtmlGenerator.Enums;
 
 namespace HtmlGenerator.StringGenerator
+
 {
     public class ButtonStringGenerator : HtmlTextContainerStringGenerator
     {
