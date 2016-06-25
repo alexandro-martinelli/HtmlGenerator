@@ -46,7 +46,16 @@
     <Compile Include="Commons\HtmlTextContainer.cs" />
     <Compile Include="Commons\HtmlTextTag.cs" />
     <Compile Include="Enums\ButtonType.cs" />
+    <Compile Include="Enums\Direction.cs" />
     <Compile Include="Enums\Relationship.cs" />
+    <Compile Include="StringGenerator\ButtonStringGenerator.cs" />
+    <Compile Include="StringGenerator\DivStringGenerator.cs" />
+    <Compile Include="StringGenerator\HtmlContainerStringGenerator.cs" />
+    <Compile Include="StringGenerator\HtmlTagStringGenerator.cs" />
+    <Compile Include="StringGenerator\HtmlTextContainerStringGenerator.cs" />
+    <Compile Include="StringGenerator\HyperLinkStringGenerator.cs" />
+    <Compile Include="StringGenerator\MasterStringGenerator.cs" />
+    <Compile Include="StringGenerator\StringGeneratorRegister.cs" />
     <Compile Include="Tags\CheckBox.cs" />
     <Compile Include="Tags\CheckInput.cs" />
     <Compile Include="Tags\Date.cs" />
@@ -86,6 +95,7 @@
     <Compile Include="Tags\Form.cs" />
     <Compile Include="Tags\Submit.cs" />
     <Compile Include="Tags\Text.cs" />
+    <Compile Include="StringGenerator\CustomStringGenerator.cs" />
     <Compile Include="Utils\Consts.cs" />
     <Compile Include="Utils\HtmlHelper.cs" />
     <Compile Include="Utils\HtmlMaker.cs" />

@@ -11,7 +11,7 @@ namespace HtmlGeneratorTest
         public void TestAnonymousObjectToHtmlAttribute()
         {
             string lHtml = HtmlHelper.AnonymousObjectToHtmlAttribute(new { @class = "btn btn-info" });
-            Assert.AreEqual<string>(lHtml, "class=\"btn btn-info\"");
+            Assert.AreEqual<string>(lHtml, " class=\"btn btn-info\"");
         }
 
         [TestMethod]
@@ -21,7 +21,4 @@ namespace HtmlGeneratorTest
             Assert.AreEqual<string>(lHtml, "");
         }
     }
-
-
-
 }

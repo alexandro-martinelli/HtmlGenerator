@@ -3,8 +3,6 @@ using HtmlGenerator.Enums;
 
 namespace HtmlGenerator.Tags
 {
-
-
     public class HyperLink : HtmlTextContainer
     {
         public string DownloadFileName { get; set; }
@@ -13,5 +11,6 @@ namespace HtmlGenerator.Tags
         public string Media { get; set; }
         public Relationship Relationship { get; set; }
         public Target Target { get; set; }
+        public string Type { get; set; }
     }
 }

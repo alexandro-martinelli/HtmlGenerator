@@ -12,7 +12,7 @@ namespace HtmlGenerator.Tags
         }
 
         public ListItems Items { get; private set; }
-        public bool Ordered { get; set; }]
+        public bool Ordered { get; set; }
 
     }
 }

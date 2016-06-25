@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ButtonStringGeneratorTest.cs" />
     <Compile Include="HtmlHelperTest.cs" />
     <Compile Include="HtmlMakerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

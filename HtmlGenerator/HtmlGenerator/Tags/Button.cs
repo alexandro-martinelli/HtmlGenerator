@@ -10,6 +10,7 @@ namespace HtmlGenerator.Tags
         {
             Type = ButtonType.Button;
             FormOptions = new FormOptions();
+            AutoFocus = false;
         }
 
         public Button(ButtonType pType) : base()
@@ -17,6 +18,7 @@ namespace HtmlGenerator.Tags
             Type = pType;
         }
 
+        public bool AutoFocus { get; set; }
         public ButtonType Type { get; set; }
         public FormOptions FormOptions { get; }
 
