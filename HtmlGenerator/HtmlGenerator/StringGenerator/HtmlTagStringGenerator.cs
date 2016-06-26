@@ -7,17 +7,14 @@ namespace HtmlGenerator.StringGenerator
 {
     public abstract class HtmlTagStringGenerator : CustomStringGenerator
     {
-        protected string ConcatAttributeWithValue(string pAttributeName, string pAttributeValue)
+        protected internal string ConcatAttributeWithValue(string pAttributeName, string pAttributeValue)
         {
-            if ((pAttributeValue != "") && (pAttributeValue != null)){
-                return string.Format(" {0}=\"{1}\"", pAttributeName.ToLower(), pAttributeValue);
-            }
-            return "";
+            return HtmlHelper.ConcatAttributeWithValue(pAttributeName, pAttributeValue);
         }
 
-        protected string ConcatAttribute(string pAttributeName)
+        protected string ConcatOnlyAttribute(string pAttributeName)
         {
-            if ((pAttributeName != "") && (pAttributeName != null))
+            if (HtmlHelper.NotNullOrEmpty(pAttributeName))
             {
                 return " " + pAttributeName;
             }
@@ -47,7 +44,7 @@ namespace HtmlGenerator.StringGenerator
             lAttributes += ConcatAttributeWithValue("formmethod", FormMethodToString(pOptions.Method));
             if (pOptions.FormNoValidade)
             {
-                lAttributes += ConcatAttribute("formnovalidate");
+                lAttributes += ConcatOnlyAttribute("formnovalidate");
             }
             lAttributes += ConcatAttributeWithValue("formtarget", TargetToString(pOptions.Target));
             return lAttributes;
@@ -108,7 +105,7 @@ namespace HtmlGenerator.StringGenerator
             lHtml += ConcatAttributeWithValue("Style", pHtmlTag.Style);
             if (pHtmlTag.Hidden)
             {
-                lHtml += ConcatAttribute(" hidden");
+                lHtml += ConcatOnlyAttribute(" hidden");
             }
             if (!pHtmlTag.Translate)
             {
@@ -142,10 +139,10 @@ namespace HtmlGenerator.StringGenerator
             lHtml += ConvertSelfAttributes(pHtmlTag);
             if (lHtml != "")
             {
-                lHtml = string.Format("<{0} {1}>", GetHtmlTagName(), lHtml);
+                lHtml = HtmlHelper.EncapsuleBeginTag(GetHtmlTagName(), lHtml);
             }
             lHtml += ConvertMidleAttributes(pHtmlTag);
-            lHtml += string.Format("</{0}>", GetHtmlTagName());
+            lHtml += HtmlHelper.EncapsuleEndTag(GetHtmlTagName());
             return lHtml;
         }
 

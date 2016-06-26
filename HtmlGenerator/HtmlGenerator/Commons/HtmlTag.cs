@@ -32,14 +32,5 @@ namespace HtmlGenerator.Commons
         public Direction Direction { get; set; }
         public string Style { get; set; }
         public List<object> AnotherAttributes { get; private set; }
-
-        //public bool AutoFocus { get; set; }
-        //public Usage AutoComplete { get; set; }
-        //public bool ReadOnly { get; set; }
-        //public bool Required { get; set; }
-        //public int Size { get; set; }
-        //public int MaximunLength { get; set; }
-        //public string Value { get; set; }
-
     }
 }

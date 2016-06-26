@@ -1,9 +1,16 @@
 using HtmlGenerator.Commons;
 
-namespace HtmlGenerator.Table
+namespace HtmlGenerator.TableTags
 {
-    public class Table : HtmlContainer
+    public class Table : HtmlTag
     {
+        public Table()
+        {
+            Head = new TableHead();
+            Footer = new TableFooter();
+            Body = new TableBody();
+        }
+
         public bool Sorteable { get; set; }
         public bool Border { get; set; }
         public TableHead Head { get; set; }

@@ -1,14 +1,18 @@
+using System;
 using HtmlGenerator.Enums;
 
 namespace HtmlGenerator.Tags
 {
     public class Number : NumberedInput
     {
-        public Number() : base(InputType.Number)
-        {
+        public string Interval { get; set; }
 
+        protected override InputType GetInputType()
+        {
+            return InputType.Number;
         }
 
-        public string Interval { get; set; }
+        public int MaximunLength { get; set; }
+        public int Size { get; set; }
     }
 }

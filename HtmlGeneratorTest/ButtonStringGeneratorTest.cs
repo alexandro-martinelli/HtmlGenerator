@@ -21,12 +21,6 @@ namespace HtmlGeneratorTest
             string lHtml = lGenerator.ToHtmlString(lButton);
             Assert.AreEqual<string>("<button  class=\"btn btn-info\" id=\"btnCancelar\" name=\"btnCancelar\" type=\"button\">Cancelar</button>", lHtml);
         }
-        
-        [TestMethod]
-        public void TestNullAnonymousObjectToHtmlAttribute()
-        {
-            string lHtml = HtmlHelper.AnonymousObjectToHtmlAttribute(null);
-            Assert.AreEqual<string>(lHtml, "");
-        }
     }
+
 }

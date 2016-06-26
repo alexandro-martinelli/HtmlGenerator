@@ -1,12 +1,13 @@
+using System;
 using HtmlGenerator.Enums;
 
 namespace HtmlGenerator.Tags
 {
     public class RadioButton : CheckInput
     {
-        public RadioButton() : base(InputType.Radio)
+        protected override InputType GetInputType()
         {
-
+            return InputType.Radio;
         }
     }
 }

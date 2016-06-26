@@ -1,3 +1,4 @@
+using System;
 using HtmlGenerator.Commons;
 using HtmlGenerator.Enums;
 
@@ -5,11 +6,9 @@ namespace HtmlGenerator.Tags
 {
     public class Text : Input
     {
-        public Text() : base(InputType.Text)
+        protected override InputType GetInputType()
         {
-
+            return InputType.Text;
         }
-
-
     }
 }

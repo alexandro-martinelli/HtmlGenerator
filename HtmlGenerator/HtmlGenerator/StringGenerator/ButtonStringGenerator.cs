@@ -33,4 +33,5 @@ namespace HtmlGenerator.StringGenerator
             return "button";
         }
     }
+
 }

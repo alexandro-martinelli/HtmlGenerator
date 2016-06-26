@@ -53,7 +53,10 @@
     <Compile Include="ButtonStringGeneratorTest.cs" />
     <Compile Include="HtmlHelperTest.cs" />
     <Compile Include="HtmlMakerTest.cs" />
+    <Compile Include="HyperLinkStringGeneratorTest.cs" />
+    <Compile Include="LabelStringGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpanStringGeneratorTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HtmlGenerator\HtmlGenerator\HtmlGenerator.csproj">
