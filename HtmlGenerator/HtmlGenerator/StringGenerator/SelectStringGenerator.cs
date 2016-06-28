@@ -15,9 +15,13 @@ namespace HtmlGenerator.StringGenerator
             Select lSelect = (Select)pHtmlTag;
             MasterStringGenerator lGenerator = new MasterStringGenerator();
             string lHtml = "";
-            foreach (Option lOption in lSelect.Options)
+            foreach (OptionGroup lGroup in lSelect.Groups)
             {
-                lHtml += lGenerator.ToHtmlString(lOption);
+                //lHtml += lGenerator.ToHtmlString(lGroup);
+                foreach (Option lOption in lGroup.Options)                
+                {
+                    lHtml += lGenerator.ToHtmlString(lOption);
+                }
             }
             return lHtml;
         }

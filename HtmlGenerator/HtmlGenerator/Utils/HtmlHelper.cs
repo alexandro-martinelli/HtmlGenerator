@@ -32,12 +32,12 @@ namespace HtmlGenerator.Utils
             return BeginTag + CloseTag + pTag + EndTag;
         }
 
-        public static string EnclosureTag(string pTag, string pHtml, string pAttributes)
+        public static string EnclosureTag(string pTag, string pHtml, string pAttributes = "")
         {
             return EncapsuleBeginTag(pTag, pAttributes) + pHtml + EncapsuleEndTag(pTag);
         }
 
-        public static string ConcatAttributeWithValue(string pAttributeName, string pAttributeValue)
+        public static string ConcatAttributeWithValue(string pAttributeName, string pAttributeValue = "")
         {
             if (NotNullOrEmpty(pAttributeValue) && NotNullOrEmpty(pAttributeName))
             {

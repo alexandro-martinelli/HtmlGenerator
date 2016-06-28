@@ -3,6 +3,8 @@ using System.Reflection;
 using HtmlGenerator.Commons;
 using HtmlGenerator.Enums;
 using HtmlGenerator.Utils;
+using System.Collections.Generic;
+using HtmlGenerator.Attributes;
 
 namespace HtmlGenerator.StringGenerator
 {
@@ -24,7 +26,7 @@ namespace HtmlGenerator.StringGenerator
 
         protected string EnumToString(Type pEnum)
         {
-            pEnum.GetRuntime
+            //pEnum.GetRuntime
 
             return "";
         } 
@@ -141,17 +143,166 @@ namespace HtmlGenerator.StringGenerator
             return MakeHtmlString(pHtmlTag);
         }
 
-        protected string MakeHtmlString(HtmlTag pHtmlTag)
+        private string GetHtmlTagName(Type pType)
         {
-            string lHtml = ConvertBaseAttributes(pHtmlTag);
-            lHtml += ConvertSelfAttributes(pHtmlTag);
-            if (lHtml != "")
+            MemberInfo lMemberInfo = pType.GetTypeInfo();
+            IEnumerable<Attribute> lAttributes = pType.GetTypeInfo().GetCustomAttributes();
+            string lTagName = "";
+            bool lIsTagHtml = false;
+            foreach (Attribute lAttribute in lAttributes)
             {
-                lHtml = HtmlHelper.EncapsuleBeginTag(GetHtmlTagName(), lHtml);
+                if (lAttribute is HtmlTagAttribute)
+                {
+                    lIsTagHtml = true;
+                    lTagName = ((HtmlTagAttribute)lAttribute).Name;
+                    break;
+                }
             }
-            lHtml += ConvertMidleAttributes(pHtmlTag);
-            lHtml += HtmlHelper.EncapsuleEndTag(GetHtmlTagName());
+            if (!HtmlHelper.NotNullOrEmpty(lTagName) && (lIsTagHtml))
+            {
+                lTagName = pType.Name.ToLower();
+            }
+            return lTagName;
+        }
+
+        protected string MakeHtmlString(object pHtmlTag)
+        {
+            Type lType = pHtmlTag.GetType();
+            string lTagName = GetHtmlTagName(lType);
+            string lHtml = "";
+            if (lTagName != "")
+            {
+                string lTagAttributes = ExtractTagAttributes(pHtmlTag, lType);
+                if (lTagAttributes != "")
+                {
+                    lHtml = HtmlHelper.EncapsuleBeginTag(lTagName, lTagAttributes);
+                }
+                string lTagText = ExtractTagText(pHtmlTag, lType);
+                string lTagItems = ExtractTagItems(pHtmlTag, lType);
+                lHtml += lTagItems + lTagText;
+                lHtml += HtmlHelper.EncapsuleEndTag(lTagName);
+            }
             return lHtml;
+        }
+
+        private string ExtractTagItems(object pHtmlTag, Type lType)
+        {
+            IEnumerable<PropertyInfo> lProperties = lType.GetRuntimeProperties();
+            List<HtmlItems> lItemsList = new List<HtmlItems>();
+            foreach (PropertyInfo lProperty in lProperties)
+            {
+                IEnumerable<Attribute> lAttributes = lProperty.GetCustomAttributes();
+                foreach (Attribute lAttribute in lAttributes)
+                {
+                    if (lAttribute is HtmlItemsAttribute)
+                    {
+                       if (lProperty.GetValue(pHtmlTag) is HtmlItems)
+                        {
+                            lItemsList.Add((HtmlItems)lProperty.GetValue(pHtmlTag));
+                            break;
+                        }
+                    }
+                }
+            }
+            string lHtml = "";
+            foreach (HtmlItems lItems in lItemsList)
+            {
+                foreach (object lItem in lItems)
+                {
+                    lHtml += MakeHtmlString(lItem);
+                }
+            }
+            return lHtml;
+        }
+
+        private string ExtractTagText(object pHtmlTag, Type pType)
+        {
+
+            IEnumerable<PropertyInfo> lProperties = pType.GetRuntimeProperties();
+            foreach (PropertyInfo lProperty in lProperties)
+            {
+                IEnumerable<Attribute> lAttributes = lProperty.GetCustomAttributes();
+                foreach (Attribute lAttribute in lAttributes)
+                {
+                    if (lAttribute is HtmlTextAttribute)
+                    {
+                        return lProperty.GetValue(pHtmlTag).ToString();
+                    }
+                }    
+            }
+            return "";
+        }
+
+        private string ExtractTagAttributes(object pHtmlTag, Type lType)
+        {
+            IEnumerable<PropertyInfo> lProperties = lType.GetRuntimeProperties();
+            string lTagAttributes = "";
+            foreach (PropertyInfo lProperty in lProperties)
+            {
+                lTagAttributes += ExtractHtmlAttributeFromProperty(pHtmlTag, lProperty);
+            }
+
+            return lTagAttributes;
+        }
+
+        private string ExtractHtmlAttributeFromProperty(object pHtmlTag, PropertyInfo pProperty)
+        {
+            string lAttributeValue = "";
+            string lAttributeName = "";
+            bool lMappedProperty = false;
+            IEnumerable<Attribute> lAttributes = pProperty.GetCustomAttributes();
+            foreach (Attribute lAttribute in lAttributes)
+            {
+                if (lAttribute is HtmlAttributeAttribute)
+                {
+                    lAttributeValue = pProperty.GetValue(pHtmlTag).ToString();
+                    lMappedProperty = true;
+                    lAttributeName = ((HtmlAttributeAttribute)lAttribute).Name;
+                    break;
+                }
+                else if (lAttribute is HtmlNoValueAttributeAttribute)
+                {
+                    lMappedProperty = true;
+                    lAttributeValue = ((HtmlNoValueAttributeAttribute)lAttribute).Name;
+                    if (lAttributeValue == "")
+                    {
+                        lAttributeValue = pProperty.Name.ToLower();
+                    }
+                    lAttributeName = ((HtmlNoValueAttributeAttribute)lAttribute).Name;
+                    break;
+                }
+                else if (lAttribute is HtmlBoolAttributeAttribute)
+                {
+                    bool lValue = (bool)pProperty.GetValue(pHtmlTag);
+                    HtmlBoolAttributeAttribute lBoolAttribute = (HtmlBoolAttributeAttribute)lAttribute;
+                    lAttributeName = ((HtmlBoolAttributeAttribute)lAttribute).Name;
+                    if (lValue = lBoolAttribute.InsertIfValue)
+                    {
+                        lMappedProperty = true;
+                        if (lValue)
+                        {
+                            lAttributeValue = lBoolAttribute.TrueValue;
+                        }
+                        else
+                        {
+                            lAttributeValue = lBoolAttribute.FalseValue;
+                        }
+                    }
+                    break;
+                }
+                // do anomynous attributes
+            }
+            if ((lMappedProperty) && (lAttributeName == ""))
+            {
+                lAttributeName = pProperty.Name.ToLower();
+            }
+            if ((lAttributeValue != "") && (lAttributeName != "")) {
+                return ConcatAttributeWithValue(lAttributeName, lAttributeValue);
+            }
+            else
+            {
+                return ConcatOnlyAttribute(lAttributeName);
+            }
         }
 
         protected virtual string ConvertMidleAttributes(HtmlTag pHtmlTag)
