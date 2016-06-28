@@ -1,21 +1,27 @@
-﻿using HtmlGenerator.Commons;
+﻿using HtmlGenerator.Attributes;
+using HtmlGenerator.Commons;
+using System.Collections.Generic;
 
 namespace HtmlGenerator.Tags
 {
+    [HtmlTag(Name = "optgroup")]
     public class OptionGroup
     {
         public OptionGroup()
         {
-
+            Options = new Options();
         }
 
-        public OptionGroup(int pId, string pText)
+        public Option AddOption()
         {
-            Id = pId;
-            Text = pText;
+            Option lOption = new Option();
+            Options.Add(lOption);
+            return lOption;
         }
 
-        public int Id { get; set; }
-        public string Text { get; set; }
+        [HtmlAttribute]
+        public string Label { get; set; }
+        [HtmlItems]
+        public Options Options { get; private set; }
     }
 }

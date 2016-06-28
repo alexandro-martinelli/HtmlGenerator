@@ -2,7 +2,7 @@ using System;
 
 namespace HtmlGenerator.StringGenerator
 {
-    public class TableHeadStringGenerator : TableCellStringGenerator
+    public class TableHeadCellStringGenerator : TableCellStringGenerator
     {
         protected override string GetHtmlTagName()
         {

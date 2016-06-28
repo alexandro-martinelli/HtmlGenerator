@@ -1,16 +1,18 @@
 
+using HtmlGenerator.Attributes;
 using HtmlGenerator.Commons;
 
 namespace HtmlGenerator.Tags
 {
+    [HtmlTag]
     public class Select : HtmlTag
     {
         public Select()
         {
-            Options = new Options();
+            Groups = new OptionGroups();
         }
 
-        public Options Options { get; private set; }
+        [HtmlItems]
         public OptionGroups Groups { get; private set; }
     }
 

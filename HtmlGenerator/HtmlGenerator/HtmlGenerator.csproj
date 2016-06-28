@@ -37,6 +37,15 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\EnumValueAttribute.cs" />
+    <Compile Include="Attributes\HtmlAnonymousAttributeAttribute.cs" />
+    <Compile Include="Attributes\HtmlAttributeAttribute.cs" />
+    <Compile Include="Attributes\HtmlBoolAttributeAttribute.cs" />
+    <Compile Include="Attributes\HtmlItemsAttribute.cs" />
+    <Compile Include="Attributes\HtmlNoValueAttribute.cs" />
+    <Compile Include="Attributes\HtmlTagAttribute.cs" />
+    <Compile Include="Attributes\HtmlTagedAttribute.cs" />
+    <Compile Include="Attributes\HtmlTextAttribute.cs" />
     <Compile Include="Commons\AddOnOptions.cs" />
     <Compile Include="Commons\FileOptions.cs" />
     <Compile Include="Commons\FormOptions.cs" />
@@ -86,7 +95,6 @@
     <Compile Include="Tags\HyperLink.cs" />
     <Compile Include="Tags\Label.cs" />
     <Compile Include="Tags\Options.cs" />
-    <Compile Include="Enums\AddOnPosition.cs" />
     <Compile Include="Enums\FormEncodeType.cs" />
     <Compile Include="Enums\FormMethod.cs" />
     <Compile Include="Enums\InputType.cs" />

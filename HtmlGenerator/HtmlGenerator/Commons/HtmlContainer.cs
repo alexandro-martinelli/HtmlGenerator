@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using HtmlGenerator.Attributes;
 
 namespace HtmlGenerator.Commons
 {
@@ -8,7 +8,7 @@ namespace HtmlGenerator.Commons
         {
             Items = new HtmlItems();
         }
-
+        [HtmlItems]
         public HtmlItems Items { get; private set; }
     }
 }

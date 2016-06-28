@@ -7,30 +7,6 @@ namespace HtmlGenerator.StringGenerator
     {
         private static Dictionary<string, CustomStringGenerator> FListaGenerators;
 
-        private static void CreateInternalData()
-        {
-            if(FListaGenerators == null)
-            {
-                FListaGenerators = new Dictionary<string, CustomStringGenerator>();
-                GenerateData();
-            }
-        }
-
-        private static void GenerateData()
-        {
-            FListaGenerators.Add("ButtonStringGenerator", new ButtonStringGenerator());
-            FListaGenerators.Add("CheckBoxStringGenerator", new CheckBoxStringGenerator());
-            FListaGenerators.Add("RadioButtonStringGenerator", new RadioButtonStringGenerator());
-            FListaGenerators.Add("DivStringGenerator", new DivStringGenerator());
-            FListaGenerators.Add("HyperLinkStringGenerator", new HyperLinkStringGenerator());
-            FListaGenerators.Add("LabelStringGenerator", new LabelStringGenerator());
-            FListaGenerators.Add("OptionStringGenerator", new OptionStringGenerator());
-            FListaGenerators.Add("SelectStringGenerator", new SelectStringGenerator());
-            FListaGenerators.Add("TableStringGenerator", new TableStringGenerator());
-            FListaGenerators.Add("TableCellStringGenerator", new TableCellStringGenerator());
-            FListaGenerators.Add("TableHeadStringGenerator", new TableHeadStringGenerator());
-        }
-
         public static CustomStringGenerator GetRegisteredGeneratorForClass(string pName)
         {
             CreateInternalData();
@@ -39,6 +15,32 @@ namespace HtmlGenerator.StringGenerator
             return lGenerator;
         }
 
+        private static void CreateInternalData()
+        {
+            if (FListaGenerators == null)
+            {
+                FListaGenerators = new Dictionary<string, CustomStringGenerator>();
+                GenerateData();
+            }
+        }
 
+        private static void GenerateData()
+        {
+            FListaGenerators.Add("Button", new ButtonStringGenerator());
+            FListaGenerators.Add("CheckBox", new CheckBoxStringGenerator());
+            FListaGenerators.Add("RadioButton", new RadioButtonStringGenerator());
+            FListaGenerators.Add("Div", new DivStringGenerator());
+            FListaGenerators.Add("HyperLink", new HyperLinkStringGenerator());
+            FListaGenerators.Add("Label", new LabelStringGenerator());
+            FListaGenerators.Add("Option", new OptionStringGenerator());
+            FListaGenerators.Add("Select", new SelectStringGenerator());
+            FListaGenerators.Add("Table", new TableStringGenerator());
+            FListaGenerators.Add("TableHeadCell", new TableHeadCellStringGenerator());
+            FListaGenerators.Add("TableBodyCell", new TableCellStringGenerator());
+            FListaGenerators.Add("TableFooterCell", new TableCellStringGenerator());
+            FListaGenerators.Add("TableFooterCell", new TableCellStringGenerator());
+
+
+        }
     }
 }

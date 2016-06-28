@@ -1,3 +1,5 @@
+using HtmlGenerator.Attributes;
+
 namespace HtmlGenerator.Enums
 {
     public enum InputType
@@ -8,6 +10,7 @@ namespace HtmlGenerator.Enums
         Color,
         Date,
         DateTime,
+        [HtmlEnumValue(Value = "datetime-local")]
         DateTimeLocal,
         Email,
         File,

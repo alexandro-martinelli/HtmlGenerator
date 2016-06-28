@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using HtmlGenerator.Commons;
 using HtmlGenerator.Enums;
 using HtmlGenerator.Utils;
@@ -20,6 +21,13 @@ namespace HtmlGenerator.StringGenerator
             }
             return "";
         }
+
+        protected string EnumToString(Type pEnum)
+        {
+            pEnum.GetRuntime
+
+            return "";
+        } 
 
         protected string UsageToString(Usage pUsage)
         {

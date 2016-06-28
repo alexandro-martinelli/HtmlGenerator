@@ -1,8 +1,10 @@
 using HtmlGenerator.Commons;
 using HtmlGenerator.Enums;
+using HtmlGenerator.Attributes;
 
 namespace HtmlGenerator.Tags
 {
+    [HtmlTag]
     public class Button : HtmlTextContainer
     {
 
@@ -17,9 +19,11 @@ namespace HtmlGenerator.Tags
         {
             Type = pType;
         }
-
+        [HtmlAttribute]
         public bool AutoFocus { get; set; }
+        [HtmlAttribute(Name = "type")]
         public ButtonType Type { get; set; }
+        [HtmlTaged]
         public FormOptions FormOptions { get; }
 
 
