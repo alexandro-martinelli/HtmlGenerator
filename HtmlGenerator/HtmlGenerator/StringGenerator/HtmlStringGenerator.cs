@@ -207,6 +207,12 @@ namespace HtmlGenerator.StringGenerator
                     lAnonymousAttribute += ExtractHtmlAttributesFromAnonymousObjects((List<object>)pProperty.GetValue(CurrentObject));
                     break;
                 }
+                else if (lAttribute is HtmlTagedAttribute)
+                {
+                    lMappedProperty = false;
+                    lAnonymousAttribute += ExtractHtmlFromTagedObject(pProperty.GetValue(CurrentObject));
+                    break;
+                }
                 
             }
             if ((lMappedProperty) && (!HtmlHelper.NotNullOrEmpty(lAttributeName)))
@@ -230,6 +236,11 @@ namespace HtmlGenerator.StringGenerator
                 lHtml += lAnonymousAttribute;
             }
             return lHtml;
+        }
+
+        private string ExtractHtmlFromTagedObject(object pObject)
+        {
+            return "taged object not implemented yet";
         }
 
         private string ExtractHtmlAttributesFromAnonymousObjects(List<object> pObjectList)
