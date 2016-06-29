@@ -7,11 +7,11 @@ namespace HtmlGeneratorTest
     [TestClass]
     public class StringGeneratorTest
     {
-        private HtmlTagStringGenerator Generator;
+        private HtmlStringGenerator Generator;
 
         public StringGeneratorTest()
         {
-            Generator = new HtmlTagStringGenerator(); 
+            Generator = new HtmlStringGenerator(); 
         }
 
         [TestMethod]

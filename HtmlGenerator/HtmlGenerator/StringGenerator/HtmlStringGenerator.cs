@@ -8,133 +8,8 @@ using HtmlGenerator.Attributes;
 
 namespace HtmlGenerator.StringGenerator
 {
-    public class HtmlTagStringGenerator : CustomStringGenerator
+    public class HtmlStringGenerator
     {
-        //old
-        protected string UsageToString(Usage pUsage)
-        {
-            string lUsage = "";
-            switch (pUsage)
-            {
-                case Usage.True:
-                    lUsage = true.ToString();
-                    break;
-                case Usage.False:
-                    lUsage = false.ToString();
-                    break;
-            }
-            return lUsage;
-        }
-
-        protected string ConvertFormOptionsToHtmlAttributes(FormOptions pOptions)
-        {
-            string lAttributes = ConcatAttributeWithValue("Form", pOptions.Forms);
-            lAttributes += ConcatAttributeWithValue("formaction", pOptions.Action);
-            lAttributes += ConcatAttributeWithValue("formenctype", FormEncodeTypeToString(pOptions.EncodeType));
-            lAttributes += ConcatAttributeWithValue("formmethod", FormMethodToString(pOptions.Method));
-            if (pOptions.FormNoValidade)
-            {
-                lAttributes += ConcatOnlyAttribute("formnovalidate");
-            }
-            lAttributes += ConcatAttributeWithValue("formtarget", TargetToString(pOptions.Target));
-            return lAttributes;
-        }
-
-        protected string TargetToString(Target pTarget)
-        {
-            switch (pTarget)
-            {
-                case Target.Blank:
-                    return "_blank";
-                case Target.Parent:
-                    return "_parent";
-                case Target.Self:
-                    return "_self";
-                case Target.Top:
-                    return "_top";
-            }
-            return "";
-        }
-
-        private string FormMethodToString(FormMethod pMethod)
-        {
-            switch (pMethod)
-            {
-                case FormMethod.Get:
-                    return "get";
-                case FormMethod.Post:
-                    return "post";
-            }
-            return "";
-
-        }
-
-        private static string FormEncodeTypeToString(FormEncodeType pEncode)
-        {
-            switch (pEncode)
-            {
-                case FormEncodeType.ApplicationFormEncoded:
-                    return "application/x-www-form-urlencoded";
-                case FormEncodeType.MultipartFormData:
-                    return  "multipart/form-data";
-                case FormEncodeType.TextPlain:
-                    return "text/plain";
-            }
-            return "";
-        }
-
-        protected string ConvertBaseAttributes(HtmlTag pHtmlTag)
-        {
-            string lHtml = ConcatAttributeWithValue("accesskey", pHtmlTag.AccessKey);
-            lHtml += ConcatAttributeWithValue("class", pHtmlTag.Class);
-            lHtml += ConcatAttributeWithValue("id", pHtmlTag.Id);
-            lHtml += ConcatAttributeWithValue("name", pHtmlTag.Name);
-            lHtml += ConcatAttributeWithValue("pattern", pHtmlTag.Pattern);
-            lHtml += ConcatAttributeWithValue("placeholder", pHtmlTag.PlaceHolder);
-            lHtml += ConcatAttributeWithValue("Title", pHtmlTag.Title);
-            lHtml += ConcatAttributeWithValue("Style", pHtmlTag.Style);
-            if (pHtmlTag.Hidden)
-            {
-                lHtml += ConcatOnlyAttribute(" hidden");
-            }
-            if (!pHtmlTag.Translate)
-            {
-                lHtml += ConcatAttributeWithValue("translate", "no");
-            }
-            if (pHtmlTag.TabIndex > 0)
-            {
-                lHtml += ConcatAttributeWithValue("TabIndex", pHtmlTag.TabIndex.ToString());
-            }
-            if (pHtmlTag.Direction != Direction.LeftToRight)
-            {
-                string lDirection = pHtmlTag.Direction == Direction.RightToLeft ? "rtl" : "auto";
-                lHtml += ConcatAttributeWithValue("dir", lDirection);
-            }
-            lHtml += ConcatAttributeWithValue("ContentEditable", UsageToString(pHtmlTag.ContentEditable));
-            foreach (object lAttribute in pHtmlTag.AnotherAttributes)
-            {
-                lHtml += HtmlHelper.AnonymousObjectToHtmlAttribute(lAttribute);
-            }
-            return lHtml;
-        }
-
-        protected virtual string ConvertMidleAttributes(HtmlTag pHtmlTag)
-        {
-            return "";
-        }
-
-        protected override string ConvertSelfAttributes(HtmlTag pHtmlTag)
-        {
-            return "";
-        }
-
-        protected override string GetHtmlTagName()
-        {
-            return "";
-        }
-
-        //new
-
         private object CurrentObject;
 
         private Type CurrenType;
@@ -153,7 +28,7 @@ namespace HtmlGenerator.StringGenerator
             return "";
         }
 
-        public sealed override string ToHtmlString(object pObject)
+        public string ToHtmlString(object pObject)
         {
             CurrentObject = pObject;
             return MakeHtmlString();
@@ -223,7 +98,7 @@ namespace HtmlGenerator.StringGenerator
             string lHtml = "";
             foreach (HtmlItems lItems in lItemsList)
             {
-                HtmlTagStringGenerator lGenerator = new HtmlTagStringGenerator();
+                HtmlStringGenerator lGenerator = new HtmlStringGenerator();
                 foreach (object lItem in lItems)
                 {
 
@@ -378,7 +253,7 @@ namespace HtmlGenerator.StringGenerator
                     IEnumerable<HtmlEnumValueAttribute> lAtributes = lField.GetCustomAttributes<HtmlEnumValueAttribute>();
                     foreach (HtmlEnumValueAttribute lAttribute in lAtributes)
                     {
-                        return lAttribute.Value;
+                    return lAttribute.Value;
                     }
                     return lField.Name.ToLower();
                 }
