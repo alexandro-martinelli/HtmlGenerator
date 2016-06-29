@@ -243,7 +243,11 @@ namespace HtmlGenerator.StringGenerator
                 {
                     if (lAttribute is HtmlTextAttribute)
                     {
-                        return lProperty.GetValue(CurrentObject).ToString();
+                        string lValue = (string)lProperty.GetValue(CurrentObject);
+                        if (HtmlHelper.NotNullOrEmpty(lValue))
+                        {
+                            return lValue;
+                        }
                     }
                 }    
             }
@@ -286,7 +290,7 @@ namespace HtmlGenerator.StringGenerator
                     bool lValue = (bool)pProperty.GetValue(CurrentObject);
                     HtmlBoolAttributeAttribute lBoolAttribute = (HtmlBoolAttributeAttribute)lAttribute;
                     lAttributeName = ((HtmlBoolAttributeAttribute)lAttribute).Name;
-                    if (lValue = lBoolAttribute.InsertIfValue)
+                    if (lValue == lBoolAttribute.InsertIfValue)
                     {
                         lMappedProperty = true;
                         if (lValue)
@@ -303,7 +307,6 @@ namespace HtmlGenerator.StringGenerator
                 else if (lAttribute is HtmlAttributeAttribute)
                 {
                     var lValue = pProperty.GetValue(CurrentObject);
-                    lMappedProperty = true;
                     if (pProperty.PropertyType.GetTypeInfo().IsEnum)
                     {
                         lAttributeValue = ExtractHtmlValueFromEnum(pProperty);
@@ -315,8 +318,12 @@ namespace HtmlGenerator.StringGenerator
                             lAttributeValue = lValue.ToString();
                         }
                     }
-                    lMappedProperty = (lAttributeValue != "") && (lAttributeValue != "0");
-                    lAttributeName = ((HtmlAttributeAttribute)lAttribute).Name;
+                    lMappedProperty = HtmlHelper.NotNullOrEmpty(lAttributeValue) && (lAttributeValue != "0");
+                    if (lMappedProperty)
+                    {
+                        lAttributeName = ((HtmlAttributeAttribute)lAttribute).Name;
+                    }
+
                     break;
                 }
                 else if (lAttribute is HtmlAnonymousAttributeAttribute)
@@ -371,14 +378,12 @@ namespace HtmlGenerator.StringGenerator
                     IEnumerable<HtmlEnumValueAttribute> lAtributes = lField.GetCustomAttributes<HtmlEnumValueAttribute>();
                     foreach (HtmlEnumValueAttribute lAttribute in lAtributes)
                     {
-                        lHtml = lAttribute.Value;
-                        break;
-
+                        return lAttribute.Value;
                     }
-                    break;
+                    return lField.Name.ToLower();
                 }
             }
-            return lHtml;
+            return "";
         }
     }
 

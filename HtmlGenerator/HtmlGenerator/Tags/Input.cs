@@ -17,6 +17,7 @@ namespace HtmlGenerator.Tags
             Required = false;
         }
 
+        [HtmlAttribute]
         public InputType Type { get { return GetInputType(); } }
 
         protected abstract InputType GetInputType();

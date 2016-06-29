@@ -8,23 +8,31 @@ namespace HtmlGenerator.Tags
     public class Button : HtmlTextContainer
     {
 
+        private void InitializeProperties()
+        {
+            if (FormOptions == null)
+            {
+                FormOptions = new FormOptions();
+            }
+            AutoFocus = false;
+        }
         public Button()
         {
             Type = ButtonType.Button;
-            FormOptions = new FormOptions();
-            AutoFocus = false;
+            InitializeProperties();
         }
 
         public Button(ButtonType pType) : base()
         {
             Type = pType;
+            InitializeProperties();
         }
-        [HtmlAttribute]
+        [HtmlBoolAttribute(InsertIfValue = true, TrueValue = "true")]
         public bool AutoFocus { get; set; }
         [HtmlAttribute(Name = "type")]
         public ButtonType Type { get; set; }
         [HtmlTaged]
-        public FormOptions FormOptions { get; }
+        public FormOptions FormOptions { get; private set; }
 
 
     }
