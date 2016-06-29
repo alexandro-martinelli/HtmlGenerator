@@ -8,29 +8,9 @@ using HtmlGenerator.Attributes;
 
 namespace HtmlGenerator.StringGenerator
 {
-    public abstract class HtmlTagStringGenerator : CustomStringGenerator
+    public class HtmlTagStringGenerator : CustomStringGenerator
     {
-        protected internal string ConcatAttributeWithValue(string pAttributeName, string pAttributeValue)
-        {
-            return HtmlHelper.ConcatAttributeWithValue(pAttributeName, pAttributeValue);
-        }
-
-        protected string ConcatOnlyAttribute(string pAttributeName)
-        {
-            if (HtmlHelper.NotNullOrEmpty(pAttributeName))
-            {
-                return " " + pAttributeName;
-            }
-            return "";
-        }
-
-        protected string EnumToString(Type pEnum)
-        {
-            //pEnum.GetRuntime
-
-            return "";
-        } 
-
+        //old
         protected string UsageToString(Usage pUsage)
         {
             string lUsage = "";
@@ -138,15 +118,71 @@ namespace HtmlGenerator.StringGenerator
             return lHtml;
         }
 
-        public sealed override string ToHtmlString(HtmlTag pHtmlTag)
+        protected virtual string ConvertMidleAttributes(HtmlTag pHtmlTag)
         {
-            return MakeHtmlString(pHtmlTag);
+            return "";
         }
 
-        private string GetHtmlTagName(Type pType)
+        protected override string ConvertSelfAttributes(HtmlTag pHtmlTag)
         {
-            MemberInfo lMemberInfo = pType.GetTypeInfo();
-            IEnumerable<Attribute> lAttributes = pType.GetTypeInfo().GetCustomAttributes();
+            return "";
+        }
+
+        protected override string GetHtmlTagName()
+        {
+            return "";
+        }
+
+        //new
+
+        private object CurrentObject;
+
+        private Type CurrenType;
+
+        protected string ConcatAttributeWithValue(string pAttributeName, string pAttributeValue)
+        {
+            return HtmlHelper.ConcatAttributeWithValue(pAttributeName, pAttributeValue);
+        }
+
+        protected string ConcatOnlyAttribute(string pAttributeName)
+        {
+            if (HtmlHelper.NotNullOrEmpty(pAttributeName))
+            {
+                return " " + pAttributeName;
+            }
+            return "";
+        }
+
+        public sealed override string ToHtmlString(object pObject)
+        {
+            CurrentObject = pObject;
+            return MakeHtmlString();
+        }
+
+        private string MakeHtmlString()
+        {
+            CurrenType = CurrentObject.GetType();
+            string lTagName = GetHtmlTagNameFromCurrentType();
+            string lHtml = "";
+            if (lTagName != "")
+            {
+                string lTagAttributes = ExtractTagAttributes();
+                if (lTagAttributes != "")
+                {
+                    lHtml = HtmlHelper.EncapsuleBeginTag(lTagName, lTagAttributes);
+                }
+                string lTagText = ExtractTagText();
+                string lTagItems = ExtractTagItems();
+                lHtml += lTagItems + lTagText;
+                lHtml += HtmlHelper.EncapsuleEndTag(lTagName);
+            }
+            return lHtml;
+        }
+
+        private string GetHtmlTagNameFromCurrentType()
+        {
+            MemberInfo lMemberInfo = CurrenType.GetTypeInfo();
+            IEnumerable<Attribute> lAttributes = CurrenType.GetTypeInfo().GetCustomAttributes();
             string lTagName = "";
             bool lIsTagHtml = false;
             foreach (Attribute lAttribute in lAttributes)
@@ -160,34 +196,14 @@ namespace HtmlGenerator.StringGenerator
             }
             if (!HtmlHelper.NotNullOrEmpty(lTagName) && (lIsTagHtml))
             {
-                lTagName = pType.Name.ToLower();
+                lTagName = CurrenType.Name.ToLower();
             }
             return lTagName;
         }
 
-        protected string MakeHtmlString(object pHtmlTag)
+        private string ExtractTagItems()
         {
-            Type lType = pHtmlTag.GetType();
-            string lTagName = GetHtmlTagName(lType);
-            string lHtml = "";
-            if (lTagName != "")
-            {
-                string lTagAttributes = ExtractTagAttributes(pHtmlTag, lType);
-                if (lTagAttributes != "")
-                {
-                    lHtml = HtmlHelper.EncapsuleBeginTag(lTagName, lTagAttributes);
-                }
-                string lTagText = ExtractTagText(pHtmlTag, lType);
-                string lTagItems = ExtractTagItems(pHtmlTag, lType);
-                lHtml += lTagItems + lTagText;
-                lHtml += HtmlHelper.EncapsuleEndTag(lTagName);
-            }
-            return lHtml;
-        }
-
-        private string ExtractTagItems(object pHtmlTag, Type lType)
-        {
-            IEnumerable<PropertyInfo> lProperties = lType.GetRuntimeProperties();
+            IEnumerable<PropertyInfo> lProperties = CurrenType.GetRuntimeProperties();
             List<HtmlItems> lItemsList = new List<HtmlItems>();
             foreach (PropertyInfo lProperty in lProperties)
             {
@@ -196,9 +212,9 @@ namespace HtmlGenerator.StringGenerator
                 {
                     if (lAttribute is HtmlItemsAttribute)
                     {
-                       if (lProperty.GetValue(pHtmlTag) is HtmlItems)
+                       if (lProperty.GetValue(CurrentObject) is HtmlItems)
                         {
-                            lItemsList.Add((HtmlItems)lProperty.GetValue(pHtmlTag));
+                            lItemsList.Add((HtmlItems)lProperty.GetValue(CurrentObject));
                             break;
                         }
                     }
@@ -207,18 +223,19 @@ namespace HtmlGenerator.StringGenerator
             string lHtml = "";
             foreach (HtmlItems lItems in lItemsList)
             {
+                HtmlTagStringGenerator lGenerator = new HtmlTagStringGenerator();
                 foreach (object lItem in lItems)
                 {
-                    lHtml += MakeHtmlString(lItem);
+
+                    lHtml += lGenerator.ToHtmlString(lItem);
                 }
             }
             return lHtml;
         }
 
-        private string ExtractTagText(object pHtmlTag, Type pType)
+        private string ExtractTagText()
         {
-
-            IEnumerable<PropertyInfo> lProperties = pType.GetRuntimeProperties();
+            IEnumerable<PropertyInfo> lProperties = CurrenType.GetRuntimeProperties();
             foreach (PropertyInfo lProperty in lProperties)
             {
                 IEnumerable<Attribute> lAttributes = lProperty.GetCustomAttributes();
@@ -226,54 +243,47 @@ namespace HtmlGenerator.StringGenerator
                 {
                     if (lAttribute is HtmlTextAttribute)
                     {
-                        return lProperty.GetValue(pHtmlTag).ToString();
+                        return lProperty.GetValue(CurrentObject).ToString();
                     }
                 }    
             }
             return "";
         }
 
-        private string ExtractTagAttributes(object pHtmlTag, Type lType)
+        private string ExtractTagAttributes()
         {
-            IEnumerable<PropertyInfo> lProperties = lType.GetRuntimeProperties();
+            IEnumerable<PropertyInfo> lProperties = CurrenType.GetRuntimeProperties();
             string lTagAttributes = "";
             foreach (PropertyInfo lProperty in lProperties)
             {
-                lTagAttributes += ExtractHtmlAttributeFromProperty(pHtmlTag, lProperty);
+                lTagAttributes += ExtractHtmlAttributeFromProperty(lProperty);
             }
 
             return lTagAttributes;
         }
 
-        private string ExtractHtmlAttributeFromProperty(object pHtmlTag, PropertyInfo pProperty)
+        private string ExtractHtmlAttributeFromProperty(PropertyInfo pProperty)
         {
             string lAttributeValue = "";
             string lAttributeName = "";
+            string lAnonymousAttribute = "";
             bool lMappedProperty = false;
             IEnumerable<Attribute> lAttributes = pProperty.GetCustomAttributes();
             foreach (Attribute lAttribute in lAttributes)
             {
-                if (lAttribute is HtmlAttributeAttribute)
+                if (lAttribute is HtmlNoValueAttributeAttribute)
                 {
-                    lAttributeValue = pProperty.GetValue(pHtmlTag).ToString();
-                    lMappedProperty = true;
-                    lAttributeName = ((HtmlAttributeAttribute)lAttribute).Name;
-                    break;
-                }
-                else if (lAttribute is HtmlNoValueAttributeAttribute)
-                {
-                    lMappedProperty = true;
-                    lAttributeValue = ((HtmlNoValueAttributeAttribute)lAttribute).Name;
-                    if (lAttributeValue == "")
+                    bool lValue = (bool)pProperty.GetValue(CurrentObject);
+                    if (lValue)
                     {
-                        lAttributeValue = pProperty.Name.ToLower();
+                        lMappedProperty = true;
+                        lAttributeName = ((HtmlNoValueAttributeAttribute)lAttribute).Name;
                     }
-                    lAttributeName = ((HtmlNoValueAttributeAttribute)lAttribute).Name;
                     break;
                 }
                 else if (lAttribute is HtmlBoolAttributeAttribute)
                 {
-                    bool lValue = (bool)pProperty.GetValue(pHtmlTag);
+                    bool lValue = (bool)pProperty.GetValue(CurrentObject);
                     HtmlBoolAttributeAttribute lBoolAttribute = (HtmlBoolAttributeAttribute)lAttribute;
                     lAttributeName = ((HtmlBoolAttributeAttribute)lAttribute).Name;
                     if (lValue = lBoolAttribute.InsertIfValue)
@@ -290,29 +300,86 @@ namespace HtmlGenerator.StringGenerator
                     }
                     break;
                 }
-                // do anomynous attributes
+                else if (lAttribute is HtmlAttributeAttribute)
+                {
+                    var lValue = pProperty.GetValue(CurrentObject);
+                    lMappedProperty = true;
+                    if (pProperty.PropertyType.GetTypeInfo().IsEnum)
+                    {
+                        lAttributeValue = ExtractHtmlValueFromEnum(pProperty);
+                    }
+                    else
+                    {
+                        if (lValue != null)
+                        {
+                            lAttributeValue = lValue.ToString();
+                        }
+                    }
+                    lMappedProperty = (lAttributeValue != "") && (lAttributeValue != "0");
+                    lAttributeName = ((HtmlAttributeAttribute)lAttribute).Name;
+                    break;
+                }
+                else if (lAttribute is HtmlAnonymousAttributeAttribute)
+                {
+                    lMappedProperty = false;
+                    lAnonymousAttribute += ExtractHtmlAttributesFromAnonymousObjects((List<object>)pProperty.GetValue(CurrentObject));
+                    break;
+                }
+                
             }
-            if ((lMappedProperty) && (lAttributeName == ""))
+            if ((lMappedProperty) && (!HtmlHelper.NotNullOrEmpty(lAttributeName)))
             {
                 lAttributeName = pProperty.Name.ToLower();
             }
-            if ((lAttributeValue != "") && (lAttributeName != "")) {
-                return ConcatAttributeWithValue(lAttributeName, lAttributeValue);
+            string lHtml = "";
+            if (lAttributeName != "")
+            {
+                if (lAttributeValue != "")
+                {
+                    lHtml = ConcatAttributeWithValue(lAttributeName, lAttributeValue);
+                }
+                else
+                {
+                    lHtml = ConcatOnlyAttribute(lAttributeName);
+                }
             }
             else
             {
-                return ConcatOnlyAttribute(lAttributeName);
+                lHtml += lAnonymousAttribute;
             }
+            return lHtml;
         }
 
-        protected virtual string ConvertMidleAttributes(HtmlTag pHtmlTag)
+        private string ExtractHtmlAttributesFromAnonymousObjects(List<object> pObjectList)
         {
-            return "";
+           string lHtml = "";
+            foreach (object lObject in pObjectList)
+            {
+                lHtml += HtmlHelper.AnonymousObjectToHtmlAttribute(lObject);
+            }
+            return lHtml;
         }
 
-        protected abstract string GetHtmlTagName();
+        private string ExtractHtmlValueFromEnum(PropertyInfo pProperty)
+        {
+            string lHtml = "";
+            IEnumerable<FieldInfo> lFields = pProperty.PropertyType.GetRuntimeFields();
+            foreach (FieldInfo lField in lFields)
+            {
+                if (lField.Name.ToLower().Equals(pProperty.GetValue(CurrentObject).ToString().ToLower()))
+                {
+                    IEnumerable<HtmlEnumValueAttribute> lAtributes = lField.GetCustomAttributes<HtmlEnumValueAttribute>();
+                    foreach (HtmlEnumValueAttribute lAttribute in lAtributes)
+                    {
+                        lHtml = lAttribute.Value;
+                        break;
 
-        protected abstract string ConvertSelfAttributes(HtmlTag pHtmlTag);
+                    }
+                    break;
+                }
+            }
+            return lHtml;
+        }
     }
 
 }

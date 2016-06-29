@@ -11,14 +11,14 @@ namespace HtmlGeneratorTest
         public void TestToHtmlString()
         {
 
-            LabelStringGenerator lGenerator = new LabelStringGenerator();
+            HtmlTagStringGenerator lGenerator = new HtmlTagStringGenerator();
             Label lLabel = new Label();
             lLabel.Name = "lblNome";
             lLabel.Id = "lblNome";
             lLabel.Text = "Nome";
             lLabel.For = "Nome";
             string lHtml = lGenerator.ToHtmlString(lLabel);
-            Assert.AreEqual<string>("<label  id=\"lblNome\" name=\"lblNome\" for=\"Nome\">Nome</label>", lHtml);
+            Assert.AreEqual<string>("<label  for=\"Nome\" id=\"lblNome\" name=\"lblNome\">Nome</label>", lHtml);
         }
     }
 

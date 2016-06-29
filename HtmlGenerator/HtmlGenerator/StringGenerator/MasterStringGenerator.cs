@@ -6,14 +6,11 @@ namespace HtmlGenerator.StringGenerator
 {
     public class MasterStringGenerator : CustomStringGenerator
     {
-        public override string ToHtmlString(HtmlTag pHtmlTag)
+        public override string ToHtmlString(object pObject)
         {
             string lHtml = "";
-            CustomStringGenerator lGenerator = StringGeneratorRegister.GetRegisteredGeneratorForClass(pHtmlTag.GetType().Name);
-            if (lGenerator != null)
-            {
-                lHtml = lGenerator.ToHtmlString(pHtmlTag);
-            }
+            HtmlTagStringGenerator lGenerator = new HtmlTagStringGenerator();
+            lHtml = lGenerator.ToHtmlString(pObject);
             return lHtml;
         }
     }
