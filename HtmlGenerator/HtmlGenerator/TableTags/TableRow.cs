@@ -1,22 +1,50 @@
 using System.Collections.Generic;
+using HtmlGenerator.Attributes;
+using HtmlGenerator.Utils;
+using HtmlGenerator.Enums;
+using HtmlGenerator.Commons;
 
 namespace HtmlGenerator.TableTags
 {
-    public class TableRow<T> : List<T> where T : TableCell, new()
+    [HtmlTag(Name = "tr")]
+    public class TableRow<T> : HtmlTag where T : TableCell, new()
     {
         public TableRow()
         {
-            Attributes = new List<object>();
+            Cells = new List<T>();
         }
 
         public T AddCell()
         {
-            T lCell = new T();
-            Add(lCell);
-            return lCell;
+            return AddCell(null);
         }
 
-        public List<object> Attributes { get; private set; }
+        public void AddCellForText(string[] pTexts)
+        {
+            foreach (string lText in pTexts)
+            {
+                T lCell = AddCell();
+                lCell.Text = lText;
+            }
+        }
+
+        public void AddCellForText(List<string> pTexts)
+        {
+            AddCellForText(pTexts.ToArray());
+        }
+
+        public T AddCell(Proc<T> pPopulator)
+        {
+            T lCell = new T();
+            if (pPopulator != null)
+            {
+                pPopulator(lCell);
+            }
+            Cells.Add(lCell);
+            return lCell;
+        }
+        [HtmlItems]
+        public List<T> Cells { get; private set; }
     }
 
 }

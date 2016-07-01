@@ -1,8 +1,9 @@
-using System.Collections.Generic;
+using HtmlGenerator.Attributes;
 
 namespace HtmlGenerator.TableTags
 {
-    public class TableBody : TableBodyRows
+    [HtmlTag(Name = "tbody")]
+    public class TableBody : TableRows<TableBodyCell>
     {
 
     }

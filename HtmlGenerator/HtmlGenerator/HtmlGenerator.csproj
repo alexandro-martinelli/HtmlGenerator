@@ -55,11 +55,12 @@
     <Compile Include="Commons\HtmlTextContainer.cs" />
     <Compile Include="Commons\HtmlTextTag.cs" />
     <Compile Include="Enums\ButtonType.cs" />
+    <Compile Include="Enums\CellScope.cs" />
+    <Compile Include="Enums\CellSort.cs" />
     <Compile Include="Enums\Direction.cs" />
     <Compile Include="Enums\Relationship.cs" />
+    <Compile Include="Enums\TagedLocation.cs" />
     <Compile Include="StringGenerator\HtmlStringGenerator.cs" />
-    <Compile Include="TableTags\TableBodyRow.cs" />
-    <Compile Include="TableTags\TableBodyRows.cs" />
     <Compile Include="TableTags\TableRows.cs" />
     <Compile Include="Tags\CheckBox.cs" />
     <Compile Include="Tags\CheckInput.cs" />

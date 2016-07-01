@@ -1,8 +1,8 @@
-using System.Collections.Generic;
-
+using HtmlGenerator.Attributes;
 namespace HtmlGenerator.TableTags
 {
-    public class TableFooter : TableRow<TableFooterCell>
+    [HtmlTag(Name = "tfoot")]
+    public class TableFooter : TableRows<TableFooterCell>
     {
 
     }

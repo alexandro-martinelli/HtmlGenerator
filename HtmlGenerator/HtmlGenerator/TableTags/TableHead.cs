@@ -1,8 +1,9 @@
-using System.Collections.Generic;
+using HtmlGenerator.Attributes;
 
 namespace HtmlGenerator.TableTags
 {
-    public class TableHead : TableRow<TableHeadCell>
+    [HtmlTag(Name = "thead")]
+    public class TableHead : TableRows<TableHeadCell>
     {
 
     }

@@ -11,4 +11,5 @@ namespace HtmlGenerator.Enums
         [HtmlEnumValue(Value = "auto")]
         Auto
     }
+
 }

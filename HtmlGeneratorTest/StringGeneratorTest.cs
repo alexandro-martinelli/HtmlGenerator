@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using HtmlGenerator.StringGenerator;
 using HtmlGenerator.Tags;
+using HtmlGenerator.TableTags;
 
 namespace HtmlGeneratorTest
 {
@@ -63,6 +64,20 @@ namespace HtmlGeneratorTest
         }
 
         [TestMethod]
+        public void TestButtonWithTagedToHtmlString()
+        {
+            Button lButton = new Button();
+            lButton.Name = "btnCancelar";
+            lButton.Id = "btnCancelar";
+            lButton.Text = "Cancelar";
+            lButton.Class = "btn btn-info";
+            lButton.FormOptions.Action = "noaction";
+            string lHtml = Generator.ToHtmlString(lButton);
+            Assert.AreEqual<string>("<button  type=\"button\" formaction=\"noaction\" id=\"btnCancelar\" name=\"btnCancelar\" class=\"btn btn-info\">Cancelar</button>", lHtml);
+        }
+
+
+        [TestMethod]
         public void TestDivSingleToHtmlString()
         {
             Div lDiv = new Div();
@@ -75,7 +90,7 @@ namespace HtmlGeneratorTest
         }
 
         [TestMethod]
-        public void TestDiWithButtonToHtmlString()
+        public void TestDivWithButtonToHtmlString()
         {
             Div lDiv = new Div();
             lDiv.Name = "dvCancelar";
@@ -127,6 +142,78 @@ namespace HtmlGeneratorTest
             Assert.AreEqual<string>("<input  max=\"10\" min=\"1\" type=\"number\" id=\"number\" name=\"number\"></input>", lHtml);
         }
 
-    }
+        [TestMethod]
+        public void TestEmptyTableToHtmlString()
+        {
+            Table lTable = new Table();
+            lTable.Name = "table";
+            lTable.Id = "table";
+            string lHtml = Generator.ToHtmlString(lTable);
+            Assert.AreEqual<string>("<table  id=\"table\" name=\"table\"><thead></thead> <tbody></tbody> <tfoot></tfoot></table>", lHtml);
+        }
 
+        [TestMethod]
+        public void TestTableWithHeadToHtmlString()
+        {
+            Table lTable = new Table();
+            lTable.Name = "table";
+            lTable.Id = "table";
+            lTable.Head.AddRow(pRow =>
+            {
+                pRow.AddCellForText(new string[3] { "Nome", "CPF", "RG" });
+            });
+            string lHtml = Generator.ToHtmlString(lTable);
+            Assert.AreEqual<string>("<table  id=\"table\" name=\"table\"><thead><tr><th>Nome</th><th>CPF</th><th>RG</th></tr></thead> <tbody></tbody> <tfoot></tfoot></table>", lHtml);
+        }
+
+        [TestMethod]
+        public void TestTableWithBodyToHtmlString()
+        {
+            Table lTable = new Table();
+            lTable.Name = "table";
+            lTable.Id = "table";
+            lTable.Body.AddRow(pRow =>
+            {
+                pRow.AddCellForText(new string[3] { "Alexandro Martinelli", "832.917.760-20", "1079852834" });
+            });
+            string lHtml = Generator.ToHtmlString(lTable);
+            Assert.AreEqual<string>("<table  id=\"table\" name=\"table\"><thead></thead> <tbody><tr><td>Alexandro Martinelli</td><td>832.917.760-20</td><td>1079852834</td></tr></tbody> <tfoot></tfoot></table>", lHtml);
+        }
+
+        [TestMethod]
+        public void TestTableWithFootToHtmlString()
+        {
+            Table lTable = new Table();
+            lTable.Name = "table";
+            lTable.Id = "table";
+            lTable.Footer.AddRow(pRow =>
+            {
+                pRow.AddCellForText(new string[3] { "Alexandro Martinelli", "832.917.760-20", "1079852834" });
+            });
+            string lHtml = Generator.ToHtmlString(lTable);
+            Assert.AreEqual<string>("<table  id=\"table\" name=\"table\"><thead></thead> <tbody></tbody> <tfoot><tr><td>Alexandro Martinelli</td><td>832.917.760-20</td><td>1079852834</td></tr></tfoot></table>", lHtml);
+        }
+
+        [TestMethod]
+        public void TestGridToHtmlString()
+        {
+            Table lTable = new Table();
+            lTable.Name = "table";
+            lTable.Id = "table";
+            lTable.Head.AddRow(pRow =>
+            {
+                pRow.AddCellForText(new string[3] { "Nome", "CPF", "RG" });
+            });
+            lTable.Body.AddRow(pRow =>
+            {
+                pRow.AddCellForText(new string[3] { "Alexandro Martinelli", "832.917.760-20", "1079852834" });
+            });
+            lTable.Body.AddRow(pRow =>
+            {
+                pRow.AddCellForText(new string[3] { "Elisandra Martinelli", "832.917.760-20", "1079852834" });
+            });
+            string lHtml = Generator.ToHtmlString(lTable);
+            Assert.AreEqual<string>("<table  id=\"table\" name=\"table\"><thead><tr><th>Nome</th><th>CPF</th><th>RG</th></tr></thead> <tbody><tr><td>Alexandro Martinelli</td><td>832.917.760-20</td><td>1079852834</td></tr><tr><td>Elisandra Martinelli</td><td>832.917.760-20</td><td>1079852834</td></tr></tbody> <tfoot></tfoot></table>", lHtml);
+        }
+    }
 }

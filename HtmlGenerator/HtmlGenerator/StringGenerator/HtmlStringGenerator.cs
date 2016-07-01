@@ -39,16 +39,22 @@ namespace HtmlGenerator.StringGenerator
             CurrenType = CurrentObject.GetType();
             string lTagName = GetHtmlTagNameFromCurrentType();
             string lHtml = "";
+            string lTagAttributes = ExtractTagAttributes();
+
             if (lTagName != "")
             {
-                string lTagAttributes = ExtractTagAttributes();
-                if (lTagAttributes != "")
-                {
-                    lHtml = HtmlHelper.EncapsuleBeginTag(lTagName, lTagAttributes);
-                }
-                string lTagText = ExtractTagText();
-                string lTagItems = ExtractTagItems();
-                lHtml += lTagItems + lTagText;
+                lHtml = HtmlHelper.EncapsuleBeginTag(lTagName, lTagAttributes);
+            }
+            else
+            {
+                lHtml = lTagAttributes;
+            }
+
+            string lTagText = ExtractTagText();
+            string lTagItems = ExtractTagItems();
+            lHtml += lTagItems + lTagText;
+            if (lTagName != "")
+            {
                 lHtml += HtmlHelper.EncapsuleEndTag(lTagName);
             }
             return lHtml;
@@ -79,7 +85,7 @@ namespace HtmlGenerator.StringGenerator
         private string ExtractTagItems()
         {
             IEnumerable<PropertyInfo> lProperties = CurrenType.GetRuntimeProperties();
-            List<HtmlItems> lItemsList = new List<HtmlItems>();
+            List<object> lItemsList = new List<object>();
             foreach (PropertyInfo lProperty in lProperties)
             {
                 IEnumerable<Attribute> lAttributes = lProperty.GetCustomAttributes();
@@ -87,29 +93,44 @@ namespace HtmlGenerator.StringGenerator
                 {
                     if (lAttribute is HtmlItemsAttribute)
                     {
-                       if (lProperty.GetValue(CurrentObject) is HtmlItems)
+                        if (IsListOfObject(lProperty.GetValue(CurrentObject)))
                         {
-                            lItemsList.Add((HtmlItems)lProperty.GetValue(CurrentObject));
+                            lItemsList.Add(lProperty.GetValue(CurrentObject));
                             break;
                         }
                     }
                 }
             }
             string lHtml = "";
-            foreach (HtmlItems lItems in lItemsList)
+            foreach (object lItems in lItemsList)
             {
                 HtmlStringGenerator lGenerator = new HtmlStringGenerator();
-                foreach (object lItem in lItems)
+                Array lArray = (Array)lItems.GetType().GetRuntimeMethod("ToArray", new Type[0]).Invoke(lItems, new Type[0]);
+                foreach (object lItem in lArray)
                 {
-
                     lHtml += lGenerator.ToHtmlString(lItem);
                 }
             }
             return lHtml;
         }
 
+        private bool IsListOfObject(object pObject)
+        {
+            Type lBaseType = pObject.GetType();
+            while (lBaseType != null)
+            {
+                if (lBaseType.FullName.Contains("List"))
+                {
+                    return true;
+                }
+                lBaseType = lBaseType.GetTypeInfo().BaseType;
+            }
+            return false;
+        }
+
         private string ExtractTagText()
         {
+            string lText = "";
             IEnumerable<PropertyInfo> lProperties = CurrenType.GetRuntimeProperties();
             foreach (PropertyInfo lProperty in lProperties)
             {
@@ -121,12 +142,19 @@ namespace HtmlGenerator.StringGenerator
                         string lValue = (string)lProperty.GetValue(CurrentObject);
                         if (HtmlHelper.NotNullOrEmpty(lValue))
                         {
-                            return lValue;
+                            lText += (lText != "" ? " " : "") + lValue;
+                        }
+                    }
+                    else if (lAttribute is HtmlTagedAttribute)
+                    {
+                        if (((HtmlTagedAttribute)lAttribute).Location == TagedLocation.Text)
+                        {
+                            lText += (lText != "" ? " " : "") + ExtractHtmlFromTagedObject(lProperty.GetValue(CurrentObject));
                         }
                     }
                 }    
             }
-            return "";
+            return lText;
         }
 
         private string ExtractTagAttributes()
@@ -210,7 +238,10 @@ namespace HtmlGenerator.StringGenerator
                 else if (lAttribute is HtmlTagedAttribute)
                 {
                     lMappedProperty = false;
-                    lAnonymousAttribute += ExtractHtmlFromTagedObject(pProperty.GetValue(CurrentObject));
+                    if (((HtmlTagedAttribute)lAttribute).Location == TagedLocation.Attributes)
+                    {
+                        lAnonymousAttribute += ExtractHtmlFromTagedObject(pProperty.GetValue(CurrentObject));
+                    }
                     break;
                 }
                 
@@ -240,7 +271,14 @@ namespace HtmlGenerator.StringGenerator
 
         private string ExtractHtmlFromTagedObject(object pObject)
         {
-            return "taged object not implemented yet";
+            if (pObject != null) {
+                HtmlStringGenerator lGenerator = new HtmlStringGenerator();
+                return lGenerator.ToHtmlString(pObject);
+            }
+            else
+            {
+                return ""; 
+            }
         }
 
         private string ExtractHtmlAttributesFromAnonymousObjects(List<object> pObjectList)
@@ -255,7 +293,6 @@ namespace HtmlGenerator.StringGenerator
 
         private string ExtractHtmlValueFromEnum(PropertyInfo pProperty)
         {
-            string lHtml = "";
             IEnumerable<FieldInfo> lFields = pProperty.PropertyType.GetRuntimeFields();
             foreach (FieldInfo lField in lFields)
             {

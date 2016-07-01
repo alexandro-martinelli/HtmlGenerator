@@ -1,5 +1,6 @@
 using HtmlGenerator.Commons;
 using HtmlGenerator.Attributes;
+using HtmlGenerator.Enums;
 
 namespace HtmlGenerator.TableTags
 {
@@ -17,12 +18,11 @@ namespace HtmlGenerator.TableTags
         public bool Sorteable { get; set; }
         [HtmlTag]
         public bool Border { get; set; }
+        [HtmlTaged(Location = TagedLocation.Text)]
         public TableHead Head { get; set; }
+        [HtmlTaged(Location = TagedLocation.Text)]
         public TableBody Body { get; set; }
+        [HtmlTaged(Location = TagedLocation.Text)]
         public TableFooter Footer { get; set; }
     }
-
-
-    //continuar mapeando as Tags apartir da tabela
-
 }

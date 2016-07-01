@@ -1,5 +1,6 @@
 using HtmlGenerator.Commons;
 using HtmlGenerator.Enums;
+using HtmlGenerator.TableTags;
 using HtmlGenerator.Tags;
 using HtmlGenerator.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,9 +45,6 @@ namespace HtmlGeneratorTest
             HtmlTag lItem = lDiv.Items[0];
             Assert.AreEqual(true, lItem is Span);
             Assert.AreEqual("btn btn-xs btn-danger", lItem.Class);
-
         }
-
-
     }
 }
