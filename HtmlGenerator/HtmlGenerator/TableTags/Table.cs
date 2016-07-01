@@ -19,10 +19,10 @@ namespace HtmlGenerator.TableTags
         [HtmlTag]
         public bool Border { get; set; }
         [HtmlTaged(Location = TagedLocation.Text)]
-        public TableHead Head { get; set; }
+        public TableHead Head { get; private set; }
         [HtmlTaged(Location = TagedLocation.Text)]
-        public TableBody Body { get; set; }
+        public TableBody Body { get; private set; }
         [HtmlTaged(Location = TagedLocation.Text)]
-        public TableFooter Footer { get; set; }
+        public TableFooter Footer { get; private set; }
     }
 }
